@@ -91,21 +91,33 @@ class Config(object):
         self._modify_index = -1
         self._dynamic_configuration = {}
 
+        #! Load config coming for env variables.
         self.__environment_configuration = self._build_environment_configuration()
 
         # Patroni reads the configuration from the command-line argument if it exists, otherwise from the environment
         self._config_file = configfile and os.path.exists(configfile) and configfile
         if self._config_file:
+            #! Debug print
+            print('print 10')
             self._local_configuration = self._load_config_file()
+            #! Debug print
+            print('print 21, local cfg from file + loose env: ' + self._local_configuration)
         else:
+            #! Debug print
+            print('print 11')
             config_env = os.environ.pop(self.PATRONI_CONFIG_VARIABLE, None)
             self._local_configuration = config_env and yaml.safe_load(config_env) or self.__environment_configuration
+            #! Debug print
+            print('print 22, local cfg from env only: ' + self._local_configuration)
         if validator:
             error = validator(self._local_configuration)
             if error:
                 raise ConfigParseError(error)
 
         self.__effective_configuration = self._build_effective_configuration({}, self._local_configuration)
+        #! Debug print
+        print('print 12, config: ' + self.__effective_configuration)
+
         self._data_dir = self.__effective_configuration.get('postgresql', {}).get('data_dir', "")
         self._cache_file = os.path.join(self._data_dir, self.__CACHE_FILENAME)
         self._load_cache()
@@ -151,8 +163,12 @@ class Config(object):
 
     def _load_cache(self):
         if os.path.isfile(self._cache_file):
+            #! Debug print
+            print('print 13')
             try:
                 with open(self._cache_file) as f:
+                    #! Debug print
+                    print('print 14')
                     self.set_dynamic_configuration(json.load(f))
             except Exception:
                 logger.exception('Exception when loading file: %s', self._cache_file)
@@ -183,16 +199,26 @@ class Config(object):
     # configuration could be either ClusterConfig or dict
     def set_dynamic_configuration(self, configuration):
         if isinstance(configuration, ClusterConfig):
+            #! Debug print
+            print('print 15')
             if self._modify_index == configuration.modify_index:
                 return False  # If the index didn't changed there is nothing to do
+            #! Debug print
+            print('print 16')
             self._modify_index = configuration.modify_index
             configuration = configuration.data
 
         if not deep_compare(self._dynamic_configuration, configuration):
+            #! Debug print
+            print('print 17')
             try:
                 self.__effective_configuration = self._build_effective_configuration(configuration,
                                                                                      self._local_configuration)
                 self._dynamic_configuration = configuration
+                #! Debug print
+                print('print 18 effective config: ' + self.__effective_configuration)
+                #! Debug print
+                print('print 19 dynamic config: ' + self._dynamic_configuration)
                 self._cache_needs_saving = True
                 return True
             except Exception:

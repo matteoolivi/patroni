@@ -27,6 +27,8 @@ class Patroni(AbstractPatroniDaemon):
 
         self.version = __version__
         self.dcs = get_dcs(self.config)
+        #! Debug print
+        print('print 30, dcs ' + self.dcs)
         self.watchdog = Watchdog(self.config)
         self.load_dynamic_configuration()
 
@@ -44,12 +46,20 @@ class Patroni(AbstractPatroniDaemon):
         while True:
             try:
                 cluster = self.dcs.get_cluster()
+                #! Debug print
+                print('print 31, cluster from dcs: ' + cluster)
                 if cluster and cluster.config and cluster.config.data:
                     if self.config.set_dynamic_configuration(cluster.config):
+                        #! Debug print
+                        print('print 32')
                         self.dcs.reload_config(self.config)
                         self.watchdog.reload_config(self.config)
                 elif not self.config.dynamic_configuration and 'bootstrap' in self.config:
+                    #! Debug print
+                    print('print 33')
                     if self.config.set_dynamic_configuration(self.config['bootstrap']['dcs']):
+                        #! Debug print
+                        print('print 34')
                         self.dcs.reload_config(self.config)
                 break
             except DCSError:
@@ -134,7 +144,11 @@ def patroni_main():
     from multiprocessing import freeze_support
     from patroni.validator import schema
 
+    #! Debug print
+    logger.info('print 4')
     freeze_support()
+    #! Debug print
+    logger.info('print 5')
     abstract_main(Patroni, schema)
 
 
@@ -166,11 +180,16 @@ def check_psycopg2():
 
 def main():
     if os.getpid() != 1:
+        #! Debug print
+        logger.info('print 1')
         check_psycopg2()
         return patroni_main()
 
     # Patroni started with PID=1, it looks like we are in the container
     pid = 0
+
+    #! Debug print
+    logger.info('print 2')
 
     # Looks like we are in a docker, so we will act like init
     def sigchld_handler(signo, stack_frame):
@@ -202,4 +221,6 @@ def main():
     patroni = multiprocessing.Process(target=patroni_main)
     patroni.start()
     pid = patroni.pid
+    #! Debug print
+    logger.info('print 3')
     patroni.join()

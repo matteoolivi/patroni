@@ -85,9 +85,13 @@ def abstract_main(cls, validator=None):
     args = parser.parse_args()
     try:
         if validator and args.validate_config:
+            #! Debug print
+            print('print 6')
             Config(args.configfile, validator=validator)
             sys.exit()
 
+        #! Debug print
+        print('print 7')
         config = Config(args.configfile)
     except ConfigParseError as e:
         if e.value:
@@ -97,7 +101,11 @@ def abstract_main(cls, validator=None):
 
     controller = cls(config)
     try:
+        #! Debug print
+        print('print 8')
         controller.run()
+        #! Debug print
+        print('print 9')
     except KeyboardInterrupt:
         pass
     finally:
