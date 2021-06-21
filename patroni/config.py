@@ -116,7 +116,7 @@ class Config(object):
 
         self.__effective_configuration = self._build_effective_configuration({}, self._local_configuration)
         #! Debug print
-        print('print 12, config: ' + self.__effective_configuration)
+        print('print 12, config: ' + json.dumps(self.__effective_configuration))
 
         self._data_dir = self.__effective_configuration.get('postgresql', {}).get('data_dir', "")
         self._cache_file = os.path.join(self._data_dir, self.__CACHE_FILENAME)
