@@ -27,8 +27,9 @@ class Patroni(AbstractPatroniDaemon):
 
         self.version = __version__
         self.dcs = get_dcs(self.config)
-        #! Debug print
-        print('print 30, dcs ' + self.dcs)
+        #! Debug prints
+        print('print 30, dcs: ')
+        print(self.dcs)
         self.watchdog = Watchdog(self.config)
         self.load_dynamic_configuration()
 
