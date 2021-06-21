@@ -28,8 +28,7 @@ class Patroni(AbstractPatroniDaemon):
         self.version = __version__
         self.dcs = get_dcs(self.config)
         #! Debug prints
-        print('print 30, dcs: ')
-        print(self.dcs)
+        print('print 30, dcs: ' + type(self.dcs).__name__)
         self.watchdog = Watchdog(self.config)
         self.load_dynamic_configuration()
 
@@ -146,10 +145,10 @@ def patroni_main():
     from patroni.validator import schema
 
     #! Debug print
-    logger.info('print 4')
+    print('print 4')
     freeze_support()
     #! Debug print
-    logger.info('print 5')
+    print('print 5')
     abstract_main(Patroni, schema)
 
 
@@ -182,7 +181,7 @@ def check_psycopg2():
 def main():
     if os.getpid() != 1:
         #! Debug print
-        logger.info('print 1')
+        print('print 1')
         check_psycopg2()
         return patroni_main()
 
@@ -190,7 +189,7 @@ def main():
     pid = 0
 
     #! Debug print
-    logger.info('print 2')
+    print('print 2')
 
     # Looks like we are in a docker, so we will act like init
     def sigchld_handler(signo, stack_frame):
@@ -223,5 +222,5 @@ def main():
     patroni.start()
     pid = patroni.pid
     #! Debug print
-    logger.info('print 3')
+    print('print 3')
     patroni.join()
