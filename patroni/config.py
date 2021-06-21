@@ -101,14 +101,14 @@ class Config(object):
             print('print 10')
             self._local_configuration = self._load_config_file()
             #! Debug print
-            print('print 21, local cfg from file + loose env: ' + self._local_configuration)
+            print('print 21, local cfg from file + loose env: ' + json.dumps(self._local_configuration))
         else:
             #! Debug print
             print('print 11')
             config_env = os.environ.pop(self.PATRONI_CONFIG_VARIABLE, None)
             self._local_configuration = config_env and yaml.safe_load(config_env) or self.__environment_configuration
             #! Debug print
-            print('print 22, local cfg from env only: ' + self._local_configuration)
+            print('print 22, local cfg from env only: ' + json.dumps(self._local_configuration))
         if validator:
             error = validator(self._local_configuration)
             if error:
@@ -216,9 +216,9 @@ class Config(object):
                                                                                      self._local_configuration)
                 self._dynamic_configuration = configuration
                 #! Debug print
-                print('print 18 effective config: ' + self.__effective_configuration)
+                print('print 18 effective config: ' + json.dumps(self.__effective_configuration))
                 #! Debug print
-                print('print 19 dynamic config: ' + self._dynamic_configuration)
+                print('print 19 dynamic config: ' + json.dumps(self._dynamic_configuration))
                 self._cache_needs_saving = True
                 return True
             except Exception:
