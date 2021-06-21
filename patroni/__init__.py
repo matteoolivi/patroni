@@ -47,7 +47,8 @@ class Patroni(AbstractPatroniDaemon):
             try:
                 cluster = self.dcs.get_cluster()
                 #! Debug print
-                print('print 31, cluster from dcs: ' + cluster)
+                print('print 31, cluster from dcs: ')
+                print(cluster)
                 if cluster and cluster.config and cluster.config.data:
                     if self.config.set_dynamic_configuration(cluster.config):
                         #! Debug print
