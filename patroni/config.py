@@ -217,9 +217,11 @@ class Config(object):
                                                                                      self._local_configuration)
                 self._dynamic_configuration = configuration
                 #! Debug print
-                print('print 18 effective config: ' + json.dumps(self.__effective_configuration))
+                print('print 18 effective config: ')
+                print(json.dumps(self.__effective_configuration))
                 #! Debug print
-                print('print 19 dynamic config: ' + json.dumps(self._dynamic_configuration))
+                print('print 19 dynamic config: ')
+                print(json.dumps(self._dynamic_configuration))
                 self._cache_needs_saving = True
                 return True
             except Exception:

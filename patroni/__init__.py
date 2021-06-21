@@ -182,7 +182,7 @@ def check_psycopg2():
 def main():
     if os.getpid() != 1:
         #! Debug print
-        print('print 1')
+        print('print 1, pid' + str(os.getpid()))
         check_psycopg2()
         return patroni_main()
 
